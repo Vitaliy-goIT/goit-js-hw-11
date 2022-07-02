@@ -72,11 +72,18 @@
 }
 
 .photo-card {
-  width: calc((100% / 4) - 15px);
-  box-shadow: 2px 2px 2px #beb5b5;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  text-decoration: none;
+  cursor: zoom-in;
+  color: inherit;
+  width: calc((100% / 4) - 17px);
+  box-shadow: 2px 2px 2px #beb5b5;
+  border: 1px solid #000;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 img {

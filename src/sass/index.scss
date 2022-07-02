@@ -1,2 +1,10 @@
 @import './common';
 @import './example';
+@import './mixins';
+@import './gallary';
+@import './search-form';
+@import './button';
+
+body {
+  padding: 0 15px;
+}
