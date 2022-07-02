@@ -1,4 +1,4 @@
-import style from './css/style.css';
+// import style from './css/style.css';
 import axios from 'axios';
 import FetchApi from './js/fetchApi';
 
