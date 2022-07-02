@@ -1,12 +1,15 @@
 import './sass/index.scss';
-import Notiflix, { Notify } from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import { Notify } from 'notiflix';
 import FetchApi from './js/fetchApi';
 import { createGalleryEl } from './js/renderMurkUp';
 
 const form = document.querySelector('.search-form');
-const galary = document.querySelector('.gallery');
+const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 const fetchApi = new FetchApi();
+const lightbox = new SimpleLightbox('.gallery a');
 
 form.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', loadMore);
@@ -36,15 +39,16 @@ async function onSearch(e) {
   form.reset();
 }
 
-function renderMurkUp(array) {
-  galary.insertAdjacentHTML('beforeend', createGalleryEl(array));
-}
-
 async function loadMore() {
   fetchApi.incrementPage();
 
   const images = await fetchApi.fetchPicures();
   renderMurkUp(images);
+}
+
+function renderMurkUp(array) {
+  gallery.insertAdjacentHTML('beforeend', createGalleryEl(array));
+  lightbox.refresh();
 }
 
 function notFoundImagaes() {
@@ -58,5 +62,5 @@ function onFoundImages(totalHits) {
 }
 
 function resetGalery() {
-  galary.innerHTML = '';
+  gallery.innerHTML = '';
 }
