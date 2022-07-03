@@ -14,10 +14,17 @@ const lightbox = new SimpleLightbox('.gallery a');
 form.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', loadMore);
 
+// loadMoreBtn.classList.add('is-hidden');
+
 async function onSearch(e) {
   e.preventDefault();
   resetGalery();
   fetchApi.resetPage();
+  loadMoreBtn.classList.add('is-hidden');
+
+  if (document.querySelector('.end-of-pages')) {
+    deleteElement();
+  }
 
   fetchApi.query = e.currentTarget.elements.searchQuery.value;
 
@@ -34,17 +41,31 @@ async function onSearch(e) {
   } else {
     onFoundImages(fetchApi.totalHits);
     renderMurkUp(pictures);
-  }
+    loadMoreBtn.classList.remove('is-hidden');
 
-  form.reset();
+    form.reset();
+  }
 }
 
 async function loadMore() {
-  fetchApi.incrementPage();
+  try {
+    fetchApi.incrementPage();
 
-  const images = await fetchApi.fetchPicures();
-  renderMurkUp(images);
+    const images = await fetchApi.fetchPicures();
+    renderMurkUp(images);
+    endOfPage();
+    console.log(fetchApi);
+  } catch (error) {
+    console.log(error);
+  }
+  // fetchApi.incrementPage();
+
+  // const images = await fetchApi.fetchPicures();
+  // renderMurkUp(images);
+  // console.log(fetchApi);
 }
+
+console.log(fetchApi);
 
 function renderMurkUp(array) {
   gallery.insertAdjacentHTML('beforeend', createGalleryEl(array));
@@ -63,4 +84,32 @@ function onFoundImages(totalHits) {
 
 function resetGalery() {
   gallery.innerHTML = '';
+}
+
+function endOfPage() {
+  const totalPage = Math.ceil(fetchApi.totalHits / fetchApi.per_page);
+  if (totalPage === fetchApi.page) {
+    // Notify.failure(
+    //   "We're sorry, but you've reached the end of search results."
+    // );
+    loadMoreBtn.classList.add('is-hidden');
+    notificationOfAndPages();
+    // gallery.insertAdjacentHTML(
+    //   'afterend',
+    //   `<p class="end-of-pages">We're sorry, but you've reached the end of search results.</p>`
+    // );
+  }
+}
+
+function notificationOfAndPages() {
+  const notif = document.createElement('p');
+  notif.classList.add('end-of-pages');
+  notif.textContent =
+    "We're sorry, but you've reached the end of search results.";
+  gallery.after(notif);
+}
+
+function deleteElement() {
+  const text = document.querySelector('.end-of-pages');
+  text.remove();
 }
