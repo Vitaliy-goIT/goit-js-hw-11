@@ -54,18 +54,11 @@ async function loadMore() {
     const images = await fetchApi.fetchPicures();
     renderMurkUp(images);
     endOfPage();
-    console.log(fetchApi);
+    scroll();
   } catch (error) {
     console.log(error);
   }
-  // fetchApi.incrementPage();
-
-  // const images = await fetchApi.fetchPicures();
-  // renderMurkUp(images);
-  // console.log(fetchApi);
 }
-
-console.log(fetchApi);
 
 function renderMurkUp(array) {
   gallery.insertAdjacentHTML('beforeend', createGalleryEl(array));
@@ -89,15 +82,8 @@ function resetGalery() {
 function endOfPage() {
   const totalPage = Math.ceil(fetchApi.totalHits / fetchApi.per_page);
   if (totalPage === fetchApi.page) {
-    // Notify.failure(
-    //   "We're sorry, but you've reached the end of search results."
-    // );
     loadMoreBtn.classList.add('is-hidden');
     notificationOfAndPages();
-    // gallery.insertAdjacentHTML(
-    //   'afterend',
-    //   `<p class="end-of-pages">We're sorry, but you've reached the end of search results.</p>`
-    // );
   }
 }
 
@@ -112,4 +98,15 @@ function notificationOfAndPages() {
 function deleteElement() {
   const text = document.querySelector('.end-of-pages');
   text.remove();
+}
+
+function scroll() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
